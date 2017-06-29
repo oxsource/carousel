@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="IndicatorView">
+        <attr name="child_width" format="dimension" />
+        <attr name="child_height" format="dimension" />
+        <attr name="child_front" format="dimension" />
+        <attr name="child_behind" format="dimension" />
+        <attr name="child_select" format="reference" />
+        <attr name="child_normal" format="reference" />
+    </declare-styleable>
+</resources>

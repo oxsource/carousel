@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+
+        <com.oxsource.banner.CarouselView
+            android:id="@+id/carousel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.oxsource.banner.IndicatorView
+            android:id="@+id/indicator"
+            android:layout_width="25dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:background="#3c000000"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:child_behind="10dp"
+            app:child_front="10dp"
+            app:child_height="12dp"
+            app:child_normal="@drawable/shape_indicator_normal"
+            app:child_select="@drawable/shape_indicator_select"
+            app:child_width="12dp" />
+
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/btAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="90dp"
+        android:text="添加"
+        android:visibility="visible" />
+
+</LinearLayout>
