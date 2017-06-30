@@ -16,7 +16,7 @@ import android.view.MotionEvent;
 public class CarouselView extends ViewPager implements Runnable {
     private final boolean[] autoLoop = new boolean[]{false, true};
     private final int WHAT_LOOP = 100;
-    private final int DEFAULT_LOOP_MS = 1000;
+    private final int DEFAULT_LOOP_MS = 3000;
     private long loopTimeMs = DEFAULT_LOOP_MS;
     private IndicatorView indicator;
 
@@ -76,7 +76,7 @@ public class CarouselView extends ViewPager implements Runnable {
     public void setAutoLoop(boolean loop) {
         autoLoop[0] = loop;
         if (loop) {
-            handler.postAtTime(CarouselView.this, 10);
+            handler.postDelayed(CarouselView.this, loopTimeMs);
         } else {
             handler.removeCallbacks(CarouselView.this);
         }
@@ -117,6 +117,7 @@ public class CarouselView extends ViewPager implements Runnable {
     @Override
     public void run() {
         handler.sendEmptyMessage(WHAT_LOOP);
+        handler.postDelayed(CarouselView.this, loopTimeMs);
     }
 
     @Override

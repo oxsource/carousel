@@ -16,12 +16,12 @@
 
         <com.oxsource.banner.IndicatorView
             android:id="@+id/indicator"
-            android:layout_width="25dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_gravity="bottom"
             android:background="#3c000000"
             android:gravity="center"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             app:child_behind="10dp"
             app:child_front="10dp"
             app:child_height="12dp"
