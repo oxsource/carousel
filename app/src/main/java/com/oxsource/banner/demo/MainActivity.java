@@ -1,54 +1,59 @@
 package com.oxsource.banner.demo;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.oxsource.banner.CarouselView;
 import com.oxsource.banner.IndicatorView;
-import com.oxsource.banner.ViewAdapter;
+import com.oxsource.banner.PictureAdapter;
+import com.oxsource.banner.PictureEngine;
 
 public class MainActivity extends Activity {
     private CarouselView carousel;
     private IndicatorView indicator;
     private Button btAdd;
 
-    private int[] colors = new int[]{Color.YELLOW, Color.GREEN, Color.RED, Color.CYAN};
-    private ViewAdapter viewAdapter = new ViewAdapter();
-    private View addView;
+    private String[] urls = new String[]{
+            "http://img1.gtimg.com/news/pics/hv1/55/89/2222/144508300.jpg",
+            "http://tvfiles.alphacoders.com/100/hdclearart-10.png",
+            "http://cdn3.nflximg.net/images/3093/2043093.jpg",
+            "http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg"
+
+    };
+    private PictureAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         carousel = findViewById(R.id.carousel);
         indicator = findViewById(R.id.indicator);
         btAdd = findViewById(R.id.btAdd);
 
-        addView = newBackgroundColorView(Color.BLUE);
+        adapter = new PictureAdapter(getBaseContext(), new PictureEngine() {
+            @Override
+            public void load(ImageView view, Object model) {
+                Glide.with(getBaseContext()).load(model).into(view);
+            }
 
-        for (int i = 0; i < colors.length; i++) {
-            View view = newBackgroundColorView(colors[i]);
-            viewAdapter.push(view);
+            @Override
+            public void clear(ImageView view) {
+                Glide.with(getBaseContext()).clear(view);
+            }
+        });
+
+        for (int i = 0; i < urls.length; i++) {
+            adapter.push(urls[i]);
         }
-        carousel.setAdapter(viewAdapter);
-        carousel.bindIndicator(indicator);
+        carousel.setAdapter(adapter);
+        carousel.indicator(indicator);
         carousel.setAutoLoop(true);
 
         btAdd.setOnClickListener(clickListener);
-    }
-
-    private View newBackgroundColorView(int color) {
-        View view = new View(getBaseContext());
-        int wh = LinearLayout.LayoutParams.MATCH_PARENT;
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(wh, wh);
-        view.setLayoutParams(params);
-        view.setBackgroundColor(color);
-        return view;
     }
 
     private View.OnClickListener clickListener = new View.OnClickListener() {
@@ -56,9 +61,15 @@ public class MainActivity extends Activity {
         public void onClick(View view) {
             if (view.equals(btAdd)) {
                 btAdd.setEnabled(false);
-                viewAdapter.push(addView);
-                viewAdapter.notifyDataSetChanged();
+                adapter.push("");
+                adapter.notifyDataSetChanged();
             }
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        adapter.destroy();
+        super.onDestroy();
+    }
 }

@@ -28,7 +28,7 @@ public class IndicatorView extends LinearLayout {
         super(context, attrs);
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.IndicatorView);
         int width = (int) ta.getDimension(R.styleable.IndicatorView_child_width, dp2px(DEFAULT_WH_DP));
-        int height = (int) ta.getDimension(R.styleable.IndicatorView_child_width, dp2px(DEFAULT_WH_DP));
+        int height = (int) ta.getDimension(R.styleable.IndicatorView_child_height, dp2px(DEFAULT_WH_DP));
         int front = (int) ta.getDimension(R.styleable.IndicatorView_child_front, dp2px(DEFAULT_MARGIN_DP));
         int behind = (int) ta.getDimension(R.styleable.IndicatorView_child_behind, dp2px(DEFAULT_MARGIN_DP));
         params = new LayoutParams(width, height);

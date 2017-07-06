@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -19,6 +20,7 @@ public class CarouselView extends ViewPager implements Runnable {
     private final int DEFAULT_LOOP_MS = 3000;
     private long loopTimeMs = DEFAULT_LOOP_MS;
     private IndicatorView indicator;
+    private CarouselAdapter carouselAdapter;
 
     public CarouselView(Context context) {
         super(context);
@@ -49,7 +51,8 @@ public class CarouselView extends ViewPager implements Runnable {
         @Override
         public void onPageSelected(int position) {
             if (null != getIndicator()) {
-                getIndicator().current(position);
+                int index = position % carouselAdapter.getRealCount();
+                getIndicator().current(index);
             }
         }
 
@@ -86,14 +89,20 @@ public class CarouselView extends ViewPager implements Runnable {
         return autoLoop[0] && autoLoop[1];
     }
 
+    @Override
+    public void setAdapter(PagerAdapter adapter) {
+        carouselAdapter = new CarouselAdapter(this, adapter);
+        super.setAdapter(carouselAdapter);
+    }
+
     /**
      * 配置IndicatorView
      *
      * @param view
      */
-    public void bindIndicator(@NonNull IndicatorView view) {
+    public void indicator(@NonNull IndicatorView view) {
         indicator = view;
-        indicator.setAdapter(getAdapter());
+        indicator.setAdapter(carouselAdapter.getRealAdapter());
         addOnPageChangeListener(pageChangeListener);
     }
 

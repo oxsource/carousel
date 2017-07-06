@@ -24,10 +24,10 @@
             android:orientation="horizontal"
             app:child_behind="10dp"
             app:child_front="10dp"
-            app:child_height="12dp"
+            app:child_height="10dp"
             app:child_normal="@drawable/shape_indicator_normal"
             app:child_select="@drawable/shape_indicator_select"
-            app:child_width="12dp" />
+            app:child_width="10dp" />
 
     </FrameLayout>
 
@@ -39,6 +39,6 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="90dp"
         android:text="添加"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 </LinearLayout>
