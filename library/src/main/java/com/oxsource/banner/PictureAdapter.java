@@ -9,14 +9,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
+ * 轮播图适配器
  * Created by peng on 2017/7/6.
  */
 
 public class PictureAdapter extends PagerAdapter {
-    private final List<Object> models = new ArrayList<>();
+    private final List<Object> modelList = new ArrayList<>();
     private final ViewHolder viewHolder;
     private final PictureEngine engine;
 
@@ -26,12 +28,22 @@ public class PictureAdapter extends PagerAdapter {
     }
 
     public void push(@NonNull Object model) {
-        models.add(model);
+        modelList.add(model);
+    }
+
+    public void pushAll(@NonNull Object... models) {
+        for (int i = 0; i < models.length; i++) {
+            modelList.add(models[i]);
+        }
+    }
+
+    public void pushAll(@NonNull Collection<Object> models) {
+        modelList.addAll(models);
     }
 
     @Override
     public int getCount() {
-        return models.size();
+        return modelList.size();
     }
 
     @Override
@@ -42,7 +54,7 @@ public class PictureAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         ImageView view = viewHolder.obtain();
-        engine.load(view, models.get(position));
+        engine.load(view, modelList.get(position));
         container.addView(view);
         return view;
     }

@@ -2,9 +2,7 @@ package com.oxsource.banner;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
-import android.support.v4.view.PagerAdapter;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -43,17 +41,6 @@ public class IndicatorView extends LinearLayout {
         selectDrawable = ta.getDrawable(R.styleable.IndicatorView_child_select);
         normalDrawable = ta.getDrawable(R.styleable.IndicatorView_child_normal);
         ta.recycle();
-    }
-
-    public void setAdapter(final PagerAdapter adapter) {
-        adapter.registerDataSetObserver(new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-                notifyChanged(adapter.getCount());
-            }
-        });
-        adapter.notifyDataSetChanged();
     }
 
     private float dp2px(int dp) {

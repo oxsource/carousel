@@ -2,8 +2,6 @@ package com.oxsource.banner.demo;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -15,15 +13,14 @@ import com.oxsource.banner.PictureEngine;
 public class MainActivity extends Activity {
     private CarouselView carousel;
     private IndicatorView indicator;
-    private Button btAdd;
 
     private String[] urls = new String[]{
-            "http://img1.gtimg.com/news/pics/hv1/55/89/2222/144508300.jpg",
-            "http://tvfiles.alphacoders.com/100/hdclearart-10.png",
-            "http://cdn3.nflximg.net/images/3093/2043093.jpg",
-            "http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg"
-
+            "https://gss0.baidu.com/-fo3dSag_xI4khGko9WTAnF6hhy/lvpics/w%3D1000/sign=c5813c0a8d1001e94e3c100f883e7aec/574e9258d109b3defacf918bccbf6c81810a4ce4.jpg",
+            "https://gss0.baidu.com/9fo3dSag_xI4khGko9WTAnF6hhy/lvpics/h%3D800/sign=7c232598c1134954611ee564664f92dd/a5c27d1ed21b0ef439290547d7c451da80cb3ee1.jpg",
+            "https://gss0.baidu.com/7LsWdDW5_xN3otqbppnN2DJv/lvpics/h%3D800/sign=40bce4117d1ed21b66c923e59d6fddae/4b90f603738da977fe3af3c8b051f8198618e338.jpg",
+            "https://gss0.baidu.com/-fo3dSag_xI4khGko9WTAnF6hhy/lvpics/h%3D800/sign=4ae6d98caec27d1eba2636c42bd4adaf/b8014a90f603738d37ae670ab91bb051f819ec36.jpg"
     };
+
     private PictureAdapter adapter;
 
     @Override
@@ -32,8 +29,6 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         carousel = findViewById(R.id.carousel);
         indicator = findViewById(R.id.indicator);
-        btAdd = findViewById(R.id.btAdd);
-
         adapter = new PictureAdapter(getBaseContext(), new PictureEngine() {
             @Override
             public void load(ImageView view, Object model) {
@@ -45,27 +40,12 @@ public class MainActivity extends Activity {
                 Glide.with(getBaseContext()).clear(view);
             }
         });
-
-        for (int i = 0; i < urls.length; i++) {
-            adapter.push(urls[i]);
-        }
+        adapter.pushAll(urls);
         carousel.setAdapter(adapter);
         carousel.indicator(indicator);
         carousel.setAutoLoop(true);
-
-        btAdd.setOnClickListener(clickListener);
     }
 
-    private View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (view.equals(btAdd)) {
-                btAdd.setEnabled(false);
-                adapter.push("");
-                adapter.notifyDataSetChanged();
-            }
-        }
-    };
 
     @Override
     protected void onDestroy() {

@@ -102,7 +102,7 @@ public class CarouselView extends ViewPager implements Runnable {
      */
     public void indicator(@NonNull IndicatorView view) {
         indicator = view;
-        indicator.setAdapter(carouselAdapter.getRealAdapter());
+        indicator.notifyChanged(carouselAdapter.getRealCount());
         addOnPageChangeListener(pageChangeListener);
     }
 

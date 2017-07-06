@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 轮播图复用ViewHolder
  * Created by peng on 2017/7/6.
  */
 

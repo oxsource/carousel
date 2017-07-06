@@ -26,5 +26,9 @@ dependencies {
     })
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
-    compile 'com.github.oxsource:carousel:1.0.0'
+//    compile 'com.github.oxsource:carousel:1.0.0'
+    compile 'com.squareup.okhttp3:okhttp:3.8.1'
+    compile 'com.github.bumptech.glide:glide:4.0.0-RC1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC1'
+    compile project(':library')
 }

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
+ * 轮播图包装适配器
  * Created by peng on 2017/6/29.
  */
 
@@ -80,5 +81,11 @@ public class CarouselAdapter extends PagerAdapter {
     @Override
     public void restoreState(Parcelable state, ClassLoader loader) {
         getRealAdapter().restoreState(state, loader);
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+        getRealAdapter().notifyDataSetChanged();
     }
 }
