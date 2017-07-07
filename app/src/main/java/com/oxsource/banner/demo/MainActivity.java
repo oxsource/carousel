@@ -27,8 +27,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        carousel = findViewById(R.id.carousel);
-        indicator = findViewById(R.id.indicator);
+        carousel = (CarouselView) findViewById(R.id.carousel);
+        indicator = (IndicatorView) findViewById(R.id.indicator);
         adapter = new PictureAdapter(getBaseContext(), new PictureEngine() {
             @Override
             public void load(ImageView view, Object model) {
