@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 public interface PictureEngine {
 
-    void load(ImageView view, Object model);
+    <T> void load(ImageView view, T model);
 
     void clear(ImageView view);
 }
