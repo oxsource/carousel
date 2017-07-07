@@ -7,9 +7,11 @@ import android.widget.ImageView;
  * Created by peng on 2017/7/6.
  */
 
-public interface PictureEngine {
+public interface IPictureEngine {
 
     <T> void load(ImageView view, T model);
 
     void clear(ImageView view);
+
+    void destroy();
 }

@@ -20,24 +20,24 @@ import java.util.List;
 public class PictureAdapter extends PagerAdapter {
     private final List<Object> modelList = new ArrayList<>();
     private final ViewHolder viewHolder;
-    private final PictureEngine engine;
+    private final IPictureEngine engine;
 
-    public PictureAdapter(Context context, PictureEngine img) {
-        viewHolder = new ViewHolder(context);
-        engine = img;
+    public PictureAdapter(@NonNull Context context, @NonNull IPictureEngine engine) {
+        this.viewHolder = new ViewHolder(context);
+        this.engine = engine;
     }
 
-    public void push(@NonNull Object model) {
+    public <T> void push(@NonNull T model) {
         modelList.add(model);
     }
 
-    public void pushAll(@NonNull Object... models) {
+    public <T> void pushAll(@NonNull T... models) {
         for (int i = 0; i < models.length; i++) {
             modelList.add(models[i]);
         }
     }
 
-    public void pushAll(@NonNull Collection<Object> models) {
+    public <T> void pushAll(@NonNull Collection<T> models) {
         modelList.addAll(models);
     }
 
@@ -70,5 +70,6 @@ public class PictureAdapter extends PagerAdapter {
     @CallSuper
     public void destroy() {
         viewHolder.release();
+        engine.destroy();
     }
 }

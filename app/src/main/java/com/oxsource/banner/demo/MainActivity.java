@@ -5,10 +5,11 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.oxsource.banner.CarouselView;
+import com.oxsource.banner.IPictureEngine;
 import com.oxsource.banner.IndicatorView;
 import com.oxsource.banner.PictureAdapter;
-import com.oxsource.banner.PictureEngine;
 
 public class MainActivity extends Activity {
     private CarouselView carousel;
@@ -29,15 +30,23 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         carousel = (CarouselView) findViewById(R.id.carousel);
         indicator = (IndicatorView) findViewById(R.id.indicator);
-        adapter = new PictureAdapter(getBaseContext(), new PictureEngine() {
+
+        final RequestManager manager = Glide.with(getBaseContext());
+        adapter = new PictureAdapter(getBaseContext(), new IPictureEngine() {
+
             @Override
-            public void load(ImageView view, Object model) {
-                Glide.with(getBaseContext()).load(model).into(view);
+            public <T> void load(ImageView view, T model) {
+                manager.load(model).into(view);
             }
 
             @Override
             public void clear(ImageView view) {
-                Glide.with(getBaseContext()).clear(view);
+                manager.clear(view);
+            }
+
+            @Override
+            public void destroy() {
+                manager.onDestroy();
             }
         });
         adapter.pushAll(urls);
