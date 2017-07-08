@@ -1,8 +1,8 @@
 package com.oxsource.banner;
 
 import android.content.Context;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.support.annotation.CallSuper;
+import android.view.View;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -13,39 +13,39 @@ import java.util.List;
  * Created by peng on 2017/7/6.
  */
 
-public class ViewHolder {
-    private final List<ImageView> views = new ArrayList<>();
+public abstract class ViewHolder<V extends View> {
+    private final List<V> views = new ArrayList<>();
     private final WeakReference<Context> rfContext;
 
     public ViewHolder(Context context) {
         rfContext = new WeakReference<>(context);
     }
 
-    protected ImageView build(Context context) {
-        ImageView view = new ImageView(context);
-        int wh = LinearLayout.LayoutParams.MATCH_PARENT;
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(wh, wh);
-        view.setLayoutParams(params);
-        view.setScaleType(ImageView.ScaleType.FIT_XY);
-        return view;
-    }
+    protected abstract V build(Context context, int position);
 
-    public ImageView obtain() {
-        ImageView view;
+    protected abstract <T> void onLoadView(V view, int position, T... model);
+
+    protected abstract void onClearView(V view);
+
+    public final <T> V obtain(int position, T... model) {
+        V view;
         if (views.size() > 0) {
             view = views.remove(0);
         } else {
-            view = build(rfContext.get());
+            view = build(rfContext.get(), position);
         }
+        onLoadView(view, position, model);
         return view;
     }
 
-    public void recycle(ImageView view) {
+    public final void recycle(V view) {
         if (null == view.getParent()) {
             views.add(view);
+            onClearView(view);
         }
     }
 
+    @CallSuper
     public void release() {
         rfContext.clear();
         views.clear();

@@ -1,15 +1,17 @@
 package com.oxsource.banner.demo;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.oxsource.banner.CarouselView;
-import com.oxsource.banner.IPictureEngine;
 import com.oxsource.banner.IndicatorView;
 import com.oxsource.banner.PictureAdapter;
+import com.oxsource.banner.ViewHolder;
 
 public class MainActivity extends Activity {
     private CarouselView carousel;
@@ -22,7 +24,7 @@ public class MainActivity extends Activity {
             "https://gss0.baidu.com/-fo3dSag_xI4khGko9WTAnF6hhy/lvpics/h%3D800/sign=4ae6d98caec27d1eba2636c42bd4adaf/b8014a90f603738d37ae670ab91bb051f819ec36.jpg"
     };
 
-    private PictureAdapter adapter;
+    private PictureAdapter<ImageView> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,27 +34,39 @@ public class MainActivity extends Activity {
         indicator = (IndicatorView) findViewById(R.id.indicator);
 
         final RequestManager manager = Glide.with(getBaseContext());
-        adapter = new PictureAdapter(getBaseContext(), new IPictureEngine() {
 
+        ViewHolder<ImageView> viewHolder = new ViewHolder<ImageView>(getBaseContext()) {
             @Override
-            public <T> void load(ImageView view, T model) {
-                manager.load(model).into(view);
+            protected ImageView build(Context context, int position) {
+                ImageView view = new ImageView(context);
+                int wh = LinearLayout.LayoutParams.MATCH_PARENT;
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(wh, wh);
+                view.setLayoutParams(params);
+                view.setScaleType(ImageView.ScaleType.FIT_XY);
+                return view;
             }
 
             @Override
-            public void clear(ImageView view) {
+            protected <T> void onLoadView(ImageView view, int position, T... model) {
+                manager.load(model[0]).into(view);
+            }
+
+            @Override
+            protected void onClearView(ImageView view) {
                 manager.clear(view);
             }
 
             @Override
-            public void destroy() {
+            public void release() {
+                super.release();
                 manager.onDestroy();
             }
-        });
-        adapter.pushAll(urls);
+        };
+        adapter = new PictureAdapter<>(viewHolder);
+        adapter.push(false, urls);
         carousel.setAdapter(adapter);
         carousel.indicator(indicator);
-        carousel.setAutoLoop(true);
+        carousel.setLoopAble(true);
     }
 
 

@@ -14,13 +14,13 @@ import android.view.MotionEvent;
  * Created by peng on 2017/6/29.
  */
 
-public class CarouselView extends ViewPager implements Runnable {
+public class CarouselView extends ViewPager {
     private final boolean[] autoLoop = new boolean[]{false, true};
     private final int WHAT_LOOP = 100;
     private final int DEFAULT_LOOP_MS = 3000;
     private long loopTimeMs = DEFAULT_LOOP_MS;
-    private IndicatorView indicator;
     private CarouselAdapter carouselAdapter;
+    private Indicator indicator;
 
     public CarouselView(Context context) {
         super(context);
@@ -33,7 +33,7 @@ public class CarouselView extends ViewPager implements Runnable {
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
-            if (WHAT_LOOP == message.what && isAutoLoop()) {
+            if (WHAT_LOOP == message.what && isLoopAble()) {
                 int index = getCurrentItem() + 1;
                 index = index >= getAdapter().getCount() ? 0 : index;
                 setCurrentItem(index);
@@ -42,32 +42,12 @@ public class CarouselView extends ViewPager implements Runnable {
         }
     });
 
-    private OnPageChangeListener pageChangeListener = new OnPageChangeListener() {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            if (null != getIndicator()) {
-                int index = position % carouselAdapter.getRealCount();
-                getIndicator().current(index);
-            }
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-
-        }
-    };
-
     /**
      * 设置轮播间隔时间，单位（ms）
      *
      * @param ms
      */
-    public void setAutoLoopTime(long ms) {
+    public void setLoopMs(long ms) {
         loopTimeMs = ms > DEFAULT_LOOP_MS ? ms : DEFAULT_LOOP_MS;
     }
 
@@ -76,38 +56,37 @@ public class CarouselView extends ViewPager implements Runnable {
      *
      * @param loop
      */
-    public void setAutoLoop(boolean loop) {
+    public void setLoopAble(boolean loop) {
         autoLoop[0] = loop;
         if (loop) {
-            handler.postDelayed(CarouselView.this, loopTimeMs);
+            handler.postDelayed(loopRunnable, loopTimeMs);
         } else {
-            handler.removeCallbacks(CarouselView.this);
+            handler.removeCallbacks(loopRunnable);
         }
     }
 
-    public boolean isAutoLoop() {
+    public boolean isLoopAble() {
         return autoLoop[0] && autoLoop[1];
     }
 
     @Override
-    public void setAdapter(PagerAdapter adapter) {
+    public void setAdapter(@NonNull PagerAdapter adapter) {
+        if (null != indicator) {
+            indicator.setAdapter(adapter);
+        }
+        if (null == carouselAdapter) {
+            /*add listener just once*/
+            addOnPageChangeListener(changeListener);
+        }
         carouselAdapter = new CarouselAdapter(this, adapter);
         super.setAdapter(carouselAdapter);
     }
 
-    /**
-     * 配置IndicatorView
-     *
-     * @param view
-     */
-    public void indicator(@NonNull IndicatorView view) {
-        indicator = view;
-        indicator.notifyChanged(carouselAdapter.getRealCount());
-        addOnPageChangeListener(pageChangeListener);
-    }
-
-    public IndicatorView getIndicator() {
-        return indicator;
+    public void indicator(@NonNull Indicator indicator) {
+        this.indicator = indicator;
+        if (null != carouselAdapter) {
+            this.indicator.setAdapter(carouselAdapter.getRealAdapter());
+        }
     }
 
     @Override
@@ -123,15 +102,37 @@ public class CarouselView extends ViewPager implements Runnable {
         return super.onTouchEvent(ev);
     }
 
-    @Override
-    public void run() {
-        handler.sendEmptyMessage(WHAT_LOOP);
-        handler.postDelayed(CarouselView.this, loopTimeMs);
-    }
+    private Runnable loopRunnable = new Runnable() {
+        @Override
+        public void run() {
+            handler.sendEmptyMessage(WHAT_LOOP);
+            handler.postDelayed(loopRunnable, loopTimeMs);
+        }
+    };
 
     @Override
     protected void onDetachedFromWindow() {
-        handler.removeCallbacks(CarouselView.this);
+        handler.removeCallbacks(loopRunnable);
         super.onDetachedFromWindow();
     }
+
+    private OnPageChangeListener changeListener = new OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            int index = position % carouselAdapter.getRealCount();
+            if (null != indicator) {
+                indicator.onSelect(index);
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
 }
