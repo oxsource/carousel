@@ -8,6 +8,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 
 /**
  * 轮播图
@@ -15,12 +16,17 @@ import android.view.MotionEvent;
  */
 
 public class CarouselView extends ViewPager {
+    public interface OnSelectListener {
+        void select(View view, int index);
+    }
+
     private final boolean[] autoLoop = new boolean[]{false, true};
     private final int WHAT_LOOP = 100;
     private final int DEFAULT_LOOP_MS = 3000;
     private long loopTimeMs = DEFAULT_LOOP_MS;
     private CarouselAdapter carouselAdapter;
     private Indicator indicator;
+    private OnSelectListener selectListener;
 
     public CarouselView(Context context) {
         super(context);
@@ -70,7 +76,7 @@ public class CarouselView extends ViewPager {
     }
 
     @Override
-    public void setAdapter(@NonNull PagerAdapter adapter) {
+    public void setAdapter(@NonNull final PagerAdapter adapter) {
         if (null != indicator) {
             indicator.setAdapter(adapter);
         }
@@ -87,6 +93,10 @@ public class CarouselView extends ViewPager {
         if (null != carouselAdapter) {
             this.indicator.setAdapter(carouselAdapter.getRealAdapter());
         }
+    }
+
+    public void setSelectListener(OnSelectListener listener) {
+        selectListener = listener;
     }
 
     @Override
@@ -127,6 +137,10 @@ public class CarouselView extends ViewPager {
             int index = position % carouselAdapter.getRealCount();
             if (null != indicator) {
                 indicator.onSelect(index);
+            }
+            if (null != selectListener) {
+                View view = findViewWithTag(Integer.valueOf(index));
+                selectListener.select(view, index);
             }
         }
 

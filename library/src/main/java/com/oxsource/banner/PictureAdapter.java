@@ -57,6 +57,7 @@ public class PictureAdapter<V extends View> extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         V view = viewHolder.obtain(position, modelList.get(position));
+        view.setTag(Integer.valueOf(position));
         container.addView(view);
         return view;
     }
@@ -64,6 +65,7 @@ public class PictureAdapter<V extends View> extends PagerAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         V view = (V) object;
+        view.setTag(Integer.valueOf(-1));
         container.removeView(view);
         viewHolder.recycle(view);
     }
