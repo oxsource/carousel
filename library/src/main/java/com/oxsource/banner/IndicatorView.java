@@ -48,14 +48,30 @@ public class IndicatorView extends LinearLayout {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, dm);
     }
 
+    public interface OnSelectListener {
+        void select(int index);
+    }
+
+    private OnSelectListener listener;
+
+    public void setSelectListener(OnSelectListener listener) {
+        this.listener = listener;
+    }
+
     /**
      * 修改选中状态
      *
      * @param index
      */
     public void current(int index) {
+        if (index < 0 || index >= getChildCount()) {
+            return;
+        }
         for (int i = 0; i < getChildCount(); ++i) {
             getChildAt(i).setBackground(i == index ? selectDrawable : normalDrawable);
+        }
+        if (null != listener) {
+            listener.select(index);
         }
     }
 
