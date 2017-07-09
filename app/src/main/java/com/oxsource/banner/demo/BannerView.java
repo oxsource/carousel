@@ -2,9 +2,8 @@ package com.oxsource.banner.demo;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -44,22 +43,17 @@ public class BannerView extends RelativeLayout {
     }
 
     public void showAnimation(int delayMs, final int durationMs) {
-        topView.setVisibility(GONE);
-        topView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                topView.setVisibility(VISIBLE);
-                Animation animation = new TranslateAnimation(
-                        Animation.RELATIVE_TO_SELF, 1,
-                        Animation.RELATIVE_TO_SELF, 0,
-                        Animation.RELATIVE_TO_SELF, 0,
-                        Animation.RELATIVE_TO_SELF, 0
-                );
-                animation.setInterpolator(new AccelerateDecelerateInterpolator());
-                animation.setDuration(durationMs);
-                topView.setAnimation(animation);
-                animation.start();
-            }
-        }, delayMs);
+
+    }
+
+    private String viString(View v) {
+        int vi = v.getVisibility();
+        String viString = "INVISIBLE";
+        if (vi == View.VISIBLE) {
+            viString = "VISIBLE";
+        } else if (vi == View.GONE) {
+            viString = "GONE";
+        }
+        return viString;
     }
 }

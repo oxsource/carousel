@@ -1,6 +1,7 @@
 package com.oxsource.banner;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -17,7 +18,7 @@ import android.view.View;
 
 public class CarouselView extends ViewPager {
     public interface OnSelectListener {
-        void select(View view, int index);
+        void select(int index);
     }
 
     private final boolean[] autoLoop = new boolean[]{false, true};
@@ -53,8 +54,9 @@ public class CarouselView extends ViewPager {
      *
      * @param ms
      */
-    public void setLoopMs(long ms) {
+    public CarouselView setLoopMs(long ms) {
         loopTimeMs = ms > DEFAULT_LOOP_MS ? ms : DEFAULT_LOOP_MS;
+        return this;
     }
 
     /**
@@ -62,13 +64,22 @@ public class CarouselView extends ViewPager {
      *
      * @param loop
      */
-    public void setLoopAble(boolean loop) {
+    public CarouselView setLoopAble(boolean loop) {
         autoLoop[0] = loop;
         if (loop) {
             handler.postDelayed(loopRunnable, loopTimeMs);
         } else {
             handler.removeCallbacks(loopRunnable);
         }
+        return this;
+    }
+
+    public CarouselView indicator(@NonNull Indicator indicator) {
+        this.indicator = indicator;
+        if (null != carouselAdapter) {
+            this.indicator.setAdapter(carouselAdapter.getRealAdapter());
+        }
+        return this;
     }
 
     public boolean isLoopAble() {
@@ -80,23 +91,27 @@ public class CarouselView extends ViewPager {
         if (null != indicator) {
             indicator.setAdapter(adapter);
         }
-        if (null == carouselAdapter) {
-            /*add listener just once*/
-            addOnPageChangeListener(changeListener);
-        }
         carouselAdapter = new CarouselAdapter(this, adapter);
         super.setAdapter(carouselAdapter);
-    }
-
-    public void indicator(@NonNull Indicator indicator) {
-        this.indicator = indicator;
-        if (null != carouselAdapter) {
-            this.indicator.setAdapter(carouselAdapter.getRealAdapter());
-        }
+        removeOnPageChangeListener(changeListener);
+        carouselAdapter.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                addOnPageChangeListener(changeListener);
+                carouselAdapter.unregisterDataSetObserver(this);
+            }
+        });
+        carouselAdapter.notifyDataSetChanged();
     }
 
     public void setSelectListener(OnSelectListener listener) {
         selectListener = listener;
+    }
+
+    public View findViewByIndex(int index) {
+        View view = findViewWithTag(Integer.valueOf(index));
+        return view;
     }
 
     @Override
@@ -139,8 +154,7 @@ public class CarouselView extends ViewPager {
                 indicator.onSelect(index);
             }
             if (null != selectListener) {
-                View view = findViewWithTag(Integer.valueOf(index));
-                selectListener.select(view, index);
+                selectListener.select(index);
             }
         }
 
