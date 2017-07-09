@@ -26,10 +26,10 @@ public class MainActivity extends Activity {
             R.drawable.home_banner_anim_04
     };
     private String[] urls = new String[]{
-            "https://gss0.baidu.com/-fo3dSag_xI4khGko9WTAnF6hhy/lvpics/w%3D1000/sign=c5813c0a8d1001e94e3c100f883e7aec/574e9258d109b3defacf918bccbf6c81810a4ce4.jpg",
-            "https://gss0.baidu.com/9fo3dSag_xI4khGko9WTAnF6hhy/lvpics/h%3D800/sign=7c232598c1134954611ee564664f92dd/a5c27d1ed21b0ef439290547d7c451da80cb3ee1.jpg",
-            "https://gss0.baidu.com/7LsWdDW5_xN3otqbppnN2DJv/lvpics/h%3D800/sign=40bce4117d1ed21b66c923e59d6fddae/4b90f603738da977fe3af3c8b051f8198618e338.jpg",
-            "https://gss0.baidu.com/-fo3dSag_xI4khGko9WTAnF6hhy/lvpics/h%3D800/sign=4ae6d98caec27d1eba2636c42bd4adaf/b8014a90f603738d37ae670ab91bb051f819ec36.jpg"
+            "http://img2.3lian.com/2014/f2/36/d/56.jpg",
+            "http://img2.3lian.com/2014/f2/36/d/57.jpg",
+            "http://img2.3lian.com/2014/f2/36/d/61.jpg",
+            "http://img2.3lian.com/2014/f2/36/d/59.jpg"
     };
 
     private PictureAdapter<BannerView> adapter;

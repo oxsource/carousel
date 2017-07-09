@@ -21,6 +21,7 @@
         android:layout_height="match_parent"
         android:layout_alignLeft="@id/space_center"
         android:layout_alignParentRight="true"
-        android:paddingBottom="40dp"
-        android:paddingTop="40dp" />
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:scaleType="centerInside" />
 </merge>
