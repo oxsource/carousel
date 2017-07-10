@@ -14,11 +14,11 @@ import java.util.List;
  * Created by peng on 2017/7/6.
  */
 
-public class PictureAdapter<V extends View> extends PagerAdapter {
+public class PictureAdapter extends PagerAdapter {
     private final List<Object[]> modelList = new ArrayList<>();
-    private final ViewHolder<V> viewHolder;
+    private final ViewHolder viewHolder;
 
-    public PictureAdapter(@NonNull ViewHolder<V> holder) {
+    public PictureAdapter(@NonNull ViewHolder holder) {
         this.viewHolder = holder;
     }
 
@@ -56,7 +56,7 @@ public class PictureAdapter<V extends View> extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        V view = viewHolder.obtain(position, modelList.get(position));
+        View view = viewHolder.obtain(position, modelList.get(position));
         view.setTag(Integer.valueOf(position));
         container.addView(view);
         return view;
@@ -64,7 +64,7 @@ public class PictureAdapter<V extends View> extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        V view = (V) object;
+        View view = (View) object;
         view.setTag(Integer.valueOf(-1));
         container.removeView(view);
         viewHolder.recycle(view);

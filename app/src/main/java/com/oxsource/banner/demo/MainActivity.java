@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
@@ -32,33 +33,32 @@ public class MainActivity extends Activity {
             "http://img2.3lian.com/2014/f2/36/d/59.jpg"
     };
 
-    private PictureAdapter<BannerView> adapter;
+    private PictureAdapter adapter;
 
-    class MyViewHolder extends ViewHolder<BannerView> {
+    class MyViewHolder extends ViewHolder {
         public final RequestManager manager;
 
         public MyViewHolder(Context context) {
-            super(context);
+            super(context, R.layout.banner_view);
             manager = Glide.with(getBaseContext());
         }
 
         @Override
-        protected BannerView build(Context context, int position) {
-            return new BannerView(context);
+        protected <T> void onLoadView(View view, int position, T... model) {
+            ImageView bottom = (ImageView) view.findViewById(R.id.bottomImg);
+            ImageView top = (ImageView) view.findViewById(R.id.topImg);
+            manager.load(model[0]).into(bottom);
+            manager.load(model[1]).into(top);
+            top.setVisibility(View.GONE);
         }
 
         @Override
-        protected <T> void onLoadView(BannerView view, int position, T... model) {
-            manager.load(model[0]).into(view.getBottomView());
-            manager.load(model[1]).into(view.getTopView());
-            view.getTopView().setVisibility(View.GONE);
-        }
-
-        @Override
-        protected void onClearView(BannerView view) {
-            manager.clear(view.getBottomView());
-            manager.clear(view.getTopView());
-            view.getTopView().setVisibility(View.GONE);
+        protected void onClearView(View view) {
+            ImageView bottom = (ImageView) view.findViewById(R.id.bottomImg);
+            ImageView top = (ImageView) view.findViewById(R.id.topImg);
+            manager.clear(bottom);
+            manager.clear(top);
+            top.setVisibility(View.GONE);
         }
 
         @Override
@@ -76,7 +76,7 @@ public class MainActivity extends Activity {
         indicator = (IndicatorView) findViewById(R.id.indicator);
 
         final MyViewHolder viewHolder = new MyViewHolder(getBaseContext());
-        adapter = new PictureAdapter<>(viewHolder);
+        adapter = new PictureAdapter(viewHolder);
         for (int i = 0; i < urls.length; i++) {
             adapter.push(true, urls[i], anims[i]);
         }
@@ -95,22 +95,22 @@ public class MainActivity extends Activity {
             public void select(final int index) {
                 for (int i = 0; i < carousel.getChildCount(); ++i) {
                     View child = carousel.getChildAt(i);
-                    if (child instanceof BannerView) {
-                        BannerView bv = (BannerView) child;
-                        bv.getTopView().setVisibility(View.GONE);
+                    View tView = child.findViewById(R.id.topImg);
+                    if (null != tView) {
+                        tView.setVisibility(View.GONE);
                     }
                 }
                 carousel.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         View view = carousel.findViewByIndex(index);
-                        if (view instanceof BannerView) {
-                            BannerView bv = (BannerView) view;
-                            bv.getTopView().setVisibility(View.VISIBLE);
-                            if (null == bv.getTopView().getAnimation()) {
-                                bv.getTopView().setAnimation(animation);
+                        View topView = view.findViewById(R.id.topImg);
+                        if (null != topView) {
+                            topView.setVisibility(View.VISIBLE);
+                            if (null == topView.getAnimation()) {
+                                topView.setAnimation(animation);
                             }
-                            bv.getTopView().getAnimation().start();
+                            topView.getAnimation().start();
                         }
                     }
                 }, 500);
